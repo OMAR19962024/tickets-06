@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Estacionamiento</title>
+    <style>
+        @media print {
+            @page {
+                margin: 0;
+                size: 80mm 80mm;
+            }
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        
+        body {
+            font-family: 'Arial Black', 'Helvetica Bold', sans-serif;
+            margin: 0;
+            padding: 4px;
+            font-size: 14px;
+            background: white;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+        }
+        
+        .ticket {
+            width: 280px;
+            padding: 8px;
+            background: white;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 5px;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 5px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 900;
+            line-height: 1;
+        }
+        
+        .header h2 {
+            font-size: 18px;
+            margin: 4px 0;
+            font-weight: bold;
+        }
+        
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+            border-bottom: 1px dotted #000;
+            padding-bottom: 2px;
+            font-weight: bold;
+        }
+        
+        .info-label {
+            font-weight: 900;
+            color: #000;
+            font-size: 15px;
+            text-transform: uppercase;
+        }
+        
+        .info-value {
+            text-align: right;
+            font-size: 16px;
+            font-weight: 900;
+        }
+        
+        .separator {
+            border-top: 2px dashed #000;
+            margin: 8px 0;
+            position: relative;
+        }
+        
+        .separator::after {
+            content: "✂";
+            position: absolute;
+            top: -12px;
+            right: -15px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .tarifas {
+            background: #f0f0f0;
+            padding: 6px;
+            border-radius: 4px;
+            margin: 6px 0;
+            border: 2px solid #000;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #000;
+            border-top: 2px dashed #000;
+            padding-top: 6px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .highlight {
+            font-weight: 900;
+            color: #000;
+            font-size: 18px;
+        }
+        
+        .dotted-line {
+            border-bottom: 2px dotted #000;
+            margin: 4px 0;
+        }
+
+        #ticketId {
+            font-size: 20px;
+            font-weight: 900;
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+
+        #placa, #lugar {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .tarifas .info-line {
+            border-bottom: 1px solid #000;
+            margin: 2px 0;
+            padding-bottom: 2px;
+        }
+
+        .tarifas .info-value {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        @media print {
+            .info-label, .info-value {
+                font-weight: 900 !important;
+                color: #000 !important;
+            }
+            
+            .highlight {
+                font-weight: 900 !important;
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <div class="header">
+            <h1>ParKinG RenZo C9</h1>
+            <h2>TICKET DE ENTRADA</h2>
+            <div id="ticketId" class="highlight"></div>
+        </div>
+
+        <div class="info-line">
+            <span class="info-label">FECHA/HORA:</span>
+            <span id="fechaHora" class="info-value"></span>
+        </div>
+
+        <div class="info-line">
+            <span class="info-label">PLACA:</span>
+            <span id="placa" class="info-value highlight"></span>
+        </div>
+
+        <div class="info-line">
+            <span class="info-label">CARNET:</span>
+            <span id="carnet" class="info-value"></span>
+        </div>
+
+        <div class="tarifas">
+            <div class="info-line">
+                <span class="info-label">TARIFA HORA:</span>
+                <span id="tarifaHora" class="info-value highlight"></span>
+            </div>
+            <div class="info-line">
+                <span class="info-label">FRACCIÓN:</span>
+                <span id="tarifaFraccion" class="info-value"></span>
+            </div>
+        </div>
+
+        <div class="footer">
+            ¡GRACIAS POR SU PREFERENCIA!<br>
+            CONSERVE ESTE TICKET
+        </div>
+    </div>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        function formatCurrency(amount) {
+            return 'Bs' + parseFloat(amount).toFixed(2);
+        }
+
+        document.getElementById('ticketId').textContent = 'ID: ' + getUrlParameter('id');
+        document.getElementById('fechaHora').textContent = getUrlParameter('fechaHora');
+        document.getElementById('placa').textContent = getUrlParameter('placa');
+        document.getElementById('carnet').textContent = getUrlParameter('carnet');
+        document.getElementById('tarifaHora').textContent = formatCurrency(getUrlParameter('tarifaHora'));
+        document.getElementById('tarifaFraccion').textContent = formatCurrency(getUrlParameter('tarifaFraccion'));
+
+        // Imprimir automáticamente
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        }
+    </script>
+</body>
+</html>
